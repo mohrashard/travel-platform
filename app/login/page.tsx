@@ -47,7 +47,7 @@ export default function Login() {
                         </svg>
                     </div>
                     <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-white to-cyan-400">Welcome Back</h2>
-                    <p className="text-neutral-400 mt-2 font-light">Enter the portal to continue your journey</p>
+                    <p className="text-neutral-400 mt-2 font-light">Sign in to access your account</p>
                 </div>
 
                 {error && (
@@ -68,7 +68,7 @@ export default function Login() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all placeholder-neutral-600"
-                            placeholder="agent@lynkerr.com"
+                            placeholder="you@example.com"
                         />
                     </div>
 
@@ -92,14 +92,14 @@ export default function Login() {
                         <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
                             <div className="relative h-full w-8 bg-white/20" />
                         </div>
-                        <span className="relative z-10">{loading ? 'Authenticating...' : 'Initialize Session'}</span>
+                        <span className="relative z-10">{loading ? 'Signing In...' : 'Sign In'}</span>
                     </button>
                 </form>
 
                 <p className="mt-8 text-center text-sm text-neutral-400">
-                    New to the network?{' '}
+                    Don't have an account?{' '}
                     <Link href="/register" className="font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                        Register node
+                        Sign up
                     </Link>
                 </p>
             </div>

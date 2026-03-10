@@ -52,8 +52,8 @@ export default function Register() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
                     </div>
-                    <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-white to-indigo-400">Join the Network</h2>
-                    <p className="text-neutral-400 mt-2 font-light">Create your explorer profile</p>
+                    <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-white to-indigo-400">Create an Account</h2>
+                    <p className="text-neutral-400 mt-2 font-light">Sign up to get started</p>
                 </div>
 
                 {error && (
@@ -74,7 +74,7 @@ export default function Register() {
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
                             className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 outline-none transition-all placeholder-neutral-600"
-                            placeholder="e.g. Neo"
+                            placeholder="e.g. John Doe"
                         />
                     </div>
 
@@ -86,7 +86,7 @@ export default function Register() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 outline-none transition-all placeholder-neutral-600"
-                            placeholder="agent@lynkerr.com"
+                            placeholder="you@example.com"
                         />
                     </div>
 
@@ -110,14 +110,14 @@ export default function Register() {
                         <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
                             <div className="relative h-full w-8 bg-white/20" />
                         </div>
-                        <span className="relative z-10">{loading ? 'Constructing Profile...' : 'Establish Connection'}</span>
+                        <span className="relative z-10">{loading ? 'Creating Account...' : 'Sign Up'}</span>
                     </button>
                 </form>
 
                 <p className="mt-8 text-center text-sm text-neutral-400">
-                    Already registered?{' '}
+                    Already have an account?{' '}
                     <Link href="/login" className="font-semibold text-fuchsia-400 hover:text-fuchsia-300 transition-colors">
-                        Authenticate here
+                        Log in here
                     </Link>
                 </p>
             </div>
