@@ -26,6 +26,19 @@ ON public.listings FOR INSERT
 TO authenticated
 WITH CHECK (auth.uid() = user_id);
 
+-- 5. Create a policy that allows users to UPDATE their own listings
+CREATE POLICY "Users can update their own listings"
+ON public.listings FOR UPDATE
+TO authenticated
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- 6. Create a policy that allows users to DELETE their own listings
+CREATE POLICY "Users can delete their own listings"
+ON public.listings FOR DELETE
+TO authenticated
+USING (auth.uid() = user_id);
+
 -- 1. Create a table for Saved/Liked Listings
 CREATE TABLE public.saved_listings (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
