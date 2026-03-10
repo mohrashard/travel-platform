@@ -49,24 +49,6 @@ export default function Home() {
             </div>
             <span className="relative z-10 font-semibold tracking-wide">Start Exploring</span>
           </Link>
-
-          <Link
-            href="/about"
-            className="group relative inline-flex h-14 items-center justify-center overflow-hidden rounded-2xl bg-white/5 px-8 font-medium text-white border border-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:border-white/20"
-          >
-            <span className="relative z-10 font-semibold tracking-wide text-neutral-300 group-hover:text-white transition-colors">
-              How it works
-            </span>
-            <svg
-              className="ml-2 h-5 w-5 text-neutral-400 group-hover:text-white transition-colors group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </Link>
         </div>
 
         {/* Bento Box Features / Preview */}
