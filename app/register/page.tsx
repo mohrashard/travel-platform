@@ -67,7 +67,7 @@ export default function Register() {
 
                 <form onSubmit={handleRegister} className="space-y-5">
                     <div>
-                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Designation Handle</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Name</label>
                         <input
                             type="text"
                             required
@@ -79,7 +79,7 @@ export default function Register() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Email Sequence</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Email</label>
                         <input
                             type="email"
                             required
@@ -91,7 +91,7 @@ export default function Register() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Security Key</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Password</label>
                         <input
                             type="password"
                             required
