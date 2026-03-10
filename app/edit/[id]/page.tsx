@@ -8,6 +8,7 @@ import Link from 'next/link';
 export default function EditListing() {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [enhancing, setEnhancing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const [title, setTitle] = useState('');
@@ -64,6 +65,43 @@ export default function EditListing() {
 
         fetchSessionAndListing();
     }, [id, router]);
+
+    const handleEnhance = async () => {
+        if (!title && !shortDescription && !fullDescription) {
+            setError("Please fill in at least one text field (Title, Short or Full Description) for the AI to enhance.");
+            return;
+        }
+
+        setEnhancing(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/enhance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title,
+                    shortDescription,
+                    fullDescription,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to enhance text');
+            }
+
+            if (data.title) setTitle(data.title.trim());
+            if (data.shortDescription) setShortDescription(data.shortDescription.trim());
+            if (data.fullDescription) setFullDescription(data.fullDescription.trim());
+
+        } catch (err: any) {
+            setError(err.message || "An error occurred during AI enhancement.");
+        } finally {
+            setEnhancing(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -144,9 +182,27 @@ export default function EditListing() {
 
             <div className="max-w-4xl mx-auto relative z-10">
                 <div className="mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 mb-4 backdrop-blur-md">
-                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-                        <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Editor Mode</span>
+                    <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-4">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 backdrop-blur-md">
+                            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+                            <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Editor Mode</span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleEnhance}
+                            disabled={enhancing}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-fuchsia-500/10 hover:from-indigo-500/20 hover:to-fuchsia-500/20 text-fuchsia-300 font-medium rounded-xl border border-fuchsia-500/30 transition-all shadow-[0_0_15px_rgba(217,70,239,0.15)] hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] group disabled:opacity-50"
+                        >
+                            {enhancing ? (
+                                <svg className="animate-spin h-5 w-5 text-fuchsia-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            ) : (
+                                <span className="group-hover:animate-pulse">✨</span>
+                            )}
+                            {enhancing ? "Enhancing..." : "Magic AI Rewrite"}
+                        </button>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-200 to-neutral-400 tracking-tight leading-tight">
                         Edit <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Experience</span>
