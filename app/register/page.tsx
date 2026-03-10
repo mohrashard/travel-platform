@@ -18,6 +18,14 @@ export default function Register() {
         setLoading(true);
         setError(null);
 
+        // Password Validation
+        const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            setError('Password must be at least 8 characters long and include at least one number and one symbol (!@#$%^&* etc.)');
+            setLoading(false);
+            return;
+        }
+
         const { error } = await supabase.auth.signUp({
             email,
             password,
