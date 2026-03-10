@@ -37,54 +37,67 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 bg-[url('https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=2800&q=80')] bg-cover bg-center">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div className="min-h-screen flex items-center justify-center bg-[#030712] relative overflow-hidden selection:bg-fuchsia-500/30">
+            {/* Background Decorative Elements */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/20 blur-[120px]" />
+                <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/20 blur-[120px]" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+            </div>
 
-            <div className="relative z-10 w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 m-4">
+            <div className="relative z-10 w-full max-w-md p-8 sm:p-10 bg-white/[0.03] backdrop-blur-xl rounded-3xl shadow-[0_0_40px_rgba(217,70,239,0.1)] border border-white/10 m-4">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Create Account</h2>
-                    <p className="text-gray-600 mt-2">Join Lynkerr Travel today</p>
+                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-fuchsia-500 to-indigo-400 rounded-2xl flex items-center justify-center rotate-12 mb-6 shadow-[0_0_20px_rgba(217,70,239,0.4)] hover:rotate-0 transition-transform duration-300">
+                        <svg className="w-8 h-8 text-white -rotate-12 group-hover:rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-white to-indigo-400">Join the Network</h2>
+                    <p className="text-neutral-400 mt-2 font-light">Create your explorer profile</p>
                 </div>
 
                 {error && (
-                    <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md text-sm">
+                    <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-xl text-sm flex items-start gap-3">
+                        <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleRegister} className="space-y-5">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Display Name</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Designation Handle</label>
                         <input
                             type="text"
                             required
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                            placeholder="John Doe"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 outline-none transition-all placeholder-neutral-600"
+                            placeholder="e.g. Neo"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Email Sequence</label>
                         <input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                            placeholder="you@email.com"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 outline-none transition-all placeholder-neutral-600"
+                            placeholder="agent@lynkerr.com"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <label className="block text-sm font-medium text-neutral-400 mb-1.5">Security Key</label>
                         <input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white rounded-xl focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500 outline-none transition-all placeholder-neutral-600"
                             placeholder="••••••••"
                         />
                     </div>
@@ -92,16 +105,19 @@ export default function Register() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition duration-150 ease-in-out shadow-lg shadow-blue-500/30 disabled:opacity-70"
+                        className="w-full mt-2 bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:shadow-[0_0_30px_rgba(217,70,239,0.5)] hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 relative overflow-hidden group"
                     >
-                        {loading ? 'Creating Account...' : 'Register'}
+                        <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-150%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(150%)]">
+                            <div className="relative h-full w-8 bg-white/20" />
+                        </div>
+                        <span className="relative z-10">{loading ? 'Constructing Profile...' : 'Establish Connection'}</span>
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-sm text-gray-600">
-                    Already have an account?{' '}
-                    <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                        Sign in
+                <p className="mt-8 text-center text-sm text-neutral-400">
+                    Already registered?{' '}
+                    <Link href="/login" className="font-semibold text-fuchsia-400 hover:text-fuchsia-300 transition-colors">
+                        Authenticate here
                     </Link>
                 </p>
             </div>
