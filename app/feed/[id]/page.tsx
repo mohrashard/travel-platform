@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase/client';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface Listing {
@@ -15,32 +15,36 @@ interface Listing {
     full_description: string;
     creator_name: string;
     price: number;
+    user_id: string;
 }
 
 export default function ListingDetail() {
     const params = useParams();
+    const router = useRouter();
     const id = params?.id as string;
 
     const [listing, setListing] = useState<Listing | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [currentUser, setCurrentUser] = useState<any>(null);
 
     useEffect(() => {
         if (!id) return;
 
-        async function fetchListing() {
+        async function fetchListingData() {
             try {
-                const { data, error } = await supabase
-                    .from('listings')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+                const [listingResponse, sessionResponse] = await Promise.all([
+                    supabase.from('listings').select('*').eq('id', id).single(),
+                    supabase.auth.getSession(),
+                ]);
 
-                if (error) {
-                    throw error;
+                if (listingResponse.error) throw listingResponse.error;
+
+                setListing(listingResponse.data as Listing);
+
+                if (sessionResponse.data.session) {
+                    setCurrentUser(sessionResponse.data.session.user);
                 }
-
-                setListing(data as Listing);
             } catch (err: any) {
                 setError(err.message || 'Failed to fetch listing details');
             } finally {
@@ -48,8 +52,21 @@ export default function ListingDetail() {
             }
         }
 
-        fetchListing();
+        fetchListingData();
     }, [id]);
+
+    const handleDelete = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete this listing? This action cannot be undone.");
+        if (confirmed) {
+            try {
+                const { error } = await supabase.from('listings').delete().eq('id', id);
+                if (error) throw error;
+                router.push('/feed');
+            } catch (err: any) {
+                alert(err.message || "Failed to delete listing.");
+            }
+        }
+    };
 
     if (loading) {
         return (
@@ -85,8 +102,8 @@ export default function ListingDetail() {
             <div className="h-16"></div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-                {/* Breadcrumb / Back button */}
-                <div className="mb-8">
+                {/* Breadcrumb / Back button & Actions */}
+                <div className="mb-8 flex justify-between items-center">
                     <Link href="/feed" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors group">
                         <span className="bg-gray-100 group-hover:bg-blue-50 p-2 rounded-full mr-3 transition-colors">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,6 +112,17 @@ export default function ListingDetail() {
                         </span>
                         Back to Feed
                     </Link>
+
+                    {currentUser && listing && currentUser.id === listing.user_id && (
+                        <div className="flex space-x-3">
+                            <Link href={`/edit/${listing.id}`} className="px-5 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
+                                Edit
+                            </Link>
+                            <button onClick={handleDelete} className="px-5 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors">
+                                Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
