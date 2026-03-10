@@ -230,14 +230,14 @@ export default function SavedListingsPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-3">No Saved Experiences</h3>
-                        <p className="text-neutral-400 max-w-md mx-auto mb-8 text-lg font-light">
+                        <h3 className="relative z-10 text-2xl font-bold text-white mb-3">No Saved Experiences</h3>
+                        <p className="relative z-10 text-neutral-400 max-w-md mx-auto mb-8 text-lg font-light">
                             {searchTerm ? "No saved experiences match your search." : "You haven't saved any experiences yet. Browse the feed to find your next adventure!"}
                         </p>
                         {!searchTerm && (
                             <Link
                                 href="/feed"
-                                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                className="relative z-10 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                             >
                                 <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />

@@ -231,14 +231,14 @@ export default function MyListingsPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                             </svg>
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-3">No Listings Found</h3>
-                        <p className="text-neutral-400 max-w-md mx-auto mb-8 text-lg font-light">
+                        <h3 className="relative z-10 text-2xl font-bold text-white mb-3">No Listings Found</h3>
+                        <p className="relative z-10 text-neutral-400 max-w-md mx-auto mb-8 text-lg font-light">
                             {searchTerm ? "No results matching your search criteria." : "You haven't created any experiences yet."}
                         </p>
                         {!searchTerm && (
                             <Link
                                 href="/create"
-                                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                className="relative z-10 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                             >
                                 <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

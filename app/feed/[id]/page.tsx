@@ -247,7 +247,7 @@ export default function ListingDetail() {
                             <div className="text-left sm:text-right">
                                 <p className="text-sm font-medium text-neutral-400 mb-0.5">Price</p>
                                 <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400 tracking-tight flex items-baseline justify-start sm:justify-end">
-                                    <span className="text-2xl mr-1 opacity-70">$</span>
+                                    <span className="text-2xl mr-1 text-cyan-400 opacity-90">$</span>
                                     {listing.price || 0}
                                 </p>
                             </div>
