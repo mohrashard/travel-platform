@@ -28,6 +28,9 @@ export default function ListingDetail() {
     const [error, setError] = useState<string | null>(null);
     const [currentUser, setCurrentUser] = useState<any>(null);
 
+    const [isSaved, setIsSaved] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
     useEffect(() => {
         if (!id) return;
 
@@ -43,10 +46,22 @@ export default function ListingDetail() {
                 setListing(listingResponse.data as Listing);
 
                 if (sessionResponse.data.session) {
-                    setCurrentUser(sessionResponse.data.session.user);
+                    const user = sessionResponse.data.session.user;
+                    setCurrentUser(user);
+
+                    // Check if saved
+                    const { data: savedData } = await supabase
+                        .from('saved_listings')
+                        .select('id')
+                        .match({ user_id: user.id, listing_id: id })
+                        .single();
+
+                    if (savedData) setIsSaved(true);
                 }
             } catch (err: any) {
-                setError(err.message || 'Failed to fetch listing details');
+                if (err.code !== 'PGRST116') { // Ignore row not found for saved_listings match
+                    setError(err.message || 'Failed to fetch listing details');
+                }
             } finally {
                 setLoading(false);
             }
@@ -65,6 +80,33 @@ export default function ListingDetail() {
             } catch (err: any) {
                 alert(err.message || "Failed to delete listing.");
             }
+        }
+    };
+
+    const toggleSave = async () => {
+        if (!currentUser) {
+            router.push('/login');
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            if (isSaved) {
+                await supabase
+                    .from('saved_listings')
+                    .delete()
+                    .match({ user_id: currentUser.id, listing_id: id });
+                setIsSaved(false);
+            } else {
+                await supabase
+                    .from('saved_listings')
+                    .insert([{ user_id: currentUser.id, listing_id: id }]);
+                setIsSaved(true);
+            }
+        } catch (err) {
+            console.error("Error toggling save:", err);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -102,9 +144,9 @@ export default function ListingDetail() {
             <div className="h-16"></div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-                {/* Breadcrumb / Back button & Actions */}
-                <div className="mb-8 flex justify-between items-center">
-                    <Link href="/feed" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors group">
+                {/* Breadcrumb / Actions */}
+                <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                    <Link href="/feed" className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors group w-max">
                         <span className="bg-gray-100 group-hover:bg-blue-50 p-2 rounded-full mr-3 transition-colors">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -113,20 +155,39 @@ export default function ListingDetail() {
                         Back to Feed
                     </Link>
 
-                    {currentUser && listing && currentUser.id === listing.user_id && (
-                        <div className="flex space-x-3">
-                            <Link href={`/edit/${listing.id}`} className="px-5 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors">
-                                Edit
-                            </Link>
-                            <button onClick={handleDelete} className="px-5 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors">
-                                Delete
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex items-center space-x-3 self-end sm:self-auto">
+                        {/* Like Button */}
+                        <button
+                            onClick={toggleSave}
+                            disabled={isSaving}
+                            className="flex items-center justify-center px-4 py-2 text-sm font-medium bg-gray-50 hover:bg-red-50 text-gray-700 hover:text-red-500 rounded-xl transition-colors border border-gray-200"
+                        >
+                            <svg
+                                className={`w-5 h-5 mr-2 transition-colors duration-200 ${isSaved ? 'text-red-500 fill-current' : 'text-gray-400'}`}
+                                fill={isSaved ? "currentColor" : "none"}
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                            {isSaved ? "Saved" : "Save"}
+                        </button>
+
+                        {currentUser && currentUser.id === listing.user_id && (
+                            <>
+                                <Link href={`/edit/${listing.id}`} className="px-5 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors text-center">
+                                    Edit
+                                </Link>
+                                <button onClick={handleDelete} className="px-5 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors">
+                                    Delete
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
-                    {/* Left Side: Image container (60% width on Desktop) */}
+                    {/* Left Side: Image container */}
                     <div className="lg:w-[60%] w-full">
                         <div className="relative aspect-[4/3] lg:aspect-square w-full rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100/50">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -138,7 +199,7 @@ export default function ListingDetail() {
                         </div>
                     </div>
 
-                    {/* Right Side: Content container (40% width on Desktop) */}
+                    {/* Right Side: Content container */}
                     <div className="lg:w-[40%] w-full flex flex-col pt-2 lg:pt-6">
 
                         <div className="inline-flex items-center bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 shadow-sm border border-blue-100 w-max">
@@ -149,13 +210,13 @@ export default function ListingDetail() {
                             {listing.location}
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-8 leading-[1.15]">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight mb-8 leading-[1.15]">
                             {listing.title}
                         </h1>
 
-                        <div className="flex items-center justify-between border-y border-gray-100 py-6 mb-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-y border-gray-100 py-6 mb-8 gap-4">
                             <div className="flex items-center">
-                                <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-xl font-bold mr-4 shadow-md border-2 border-white">
+                                <div className="h-14 w-14 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-xl font-bold mr-4 shadow-md border-2 border-white flex-shrink-0">
                                     {listing.creator_name ? listing.creator_name.charAt(0).toUpperCase() : 'A'}
                                 </div>
                                 <div>
@@ -164,7 +225,7 @@ export default function ListingDetail() {
                                 </div>
                             </div>
 
-                            <div className="text-right">
+                            <div className="text-left sm:text-right">
                                 <p className="text-sm font-medium text-gray-500 mb-0.5">Price</p>
                                 <p className="text-3xl font-extrabold text-gray-900 tracking-tight">
                                     ${listing.price || 0}
