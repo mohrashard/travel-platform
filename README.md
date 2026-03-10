@@ -8,7 +8,7 @@ A sleek, modern marketplace-style web application where users can discover, shar
 
 ## 📖 Project Overview
 
-**Lynkerr** is a full-stack travel experience listing platform built as a mini-marketplace. The application allows users to register and log in, after which they can publish richly detailed travel experience listings complete with a cover image, location, short preview, full description, and a price. A public experience feed (accessible to anyone) displays all listings in reverse-chronological order, showing each creator's name and the posting date. Clicking any listing navigates to a dedicated detail page with the full itinerary. Logged-in users can also save experiences to a personal wishlist, manage their own listings via a personal hub, and edit or delete listings they own. As a bonus, the Create Listing form features a **"Magic AI Rewrite"** button powered by the **Gemini 2.5 Flash** API, which can upgrade draft copy into polished, publication-ready language.
+**Lynkerr** is a full-stack travel experience listing platform built as a mini-marketplace. The application allows users to register and log in, after which they can publish richly detailed travel experience listings complete with a cover image, location, short preview, full description, and a price. A public experience feed (accessible to anyone) displays all listings in reverse-chronological order, showing each creator's name and the posting date. Clicking any listing navigates to a dedicated detail page with the full itinerary. Logged-in users can also save experiences to a personal wishlist, manage their own listings via a personal hub, and edit or delete listings they own. As a bonus, both the Create and Edit Listing forms feature a **"Magic AI Rewrite"** button powered by the **Gemini 2.5 Flash** API, which can upgrade draft copy into polished, publication-ready language.
 
 ---
 
@@ -17,17 +17,17 @@ A sleek, modern marketplace-style web application where users can discover, shar
 ### Frontend
 | Technology | Why It Was Used |
 |---|---|
-| **Next.js 16 (App Router)** | Industry-standard React framework with file-based routing, server-side capability, and built-in API routes - ideal for a full-stack app in a single repository. |
+| **Next.js 16 (App Router)** | Industry-standard React framework with file-based routing, server-side capability, and built-in API routes. It is ideal for a full-stack app in a single repository. |
 | **React 19** | The component model enables declarative, reusable UI building blocks like `ListingCard` and `Navbar`. |
 | **TypeScript** | Provides static type safety across the entire codebase, catching errors at compile time and improving maintainability. |
 | **Tailwind CSS v4** | Utility-first CSS enables rapid, design-consistent UI development. The cutting-edge v4 (PostCSS plugin) was used alongside a modern dark glassmorphism aesthetic. |
-| **Geist Font (next/font)** | The Geist Sans & Geist Mono fonts from Vercel are loaded via `next/font/google` for zero layout shift and optimal performance. |
+| **Geist Font (next/font)** | The Geist Sans and Geist Mono fonts from Vercel are loaded via `next/font/google` for zero layout shift and optimal performance. |
 
 ### Backend & API
 | Technology | Why It Was Used |
 |---|---|
 | **Next.js API Routes** | The `/api/enhance` route acts as a secure server-side proxy to the Gemini AI API, keeping the API key out of the browser. |
-| **Google Gemini 2.5 Flash** | Powers the "Magic AI Rewrite" feature on the Create Listing form, acting as an expert travel copywriter that rewrites draft descriptions into polished, professional language. |
+| **Google Gemini 2.5 Flash** | Powers the "Magic AI Rewrite" feature, acting as an expert travel copywriter that rewrites draft descriptions into polished, professional language. |
 
 ### Database & Auth
 | Technology | Why It Was Used |
@@ -35,7 +35,7 @@ A sleek, modern marketplace-style web application where users can discover, shar
 | **Supabase (PostgreSQL)** | A single Backend-as-a-Service platform providing both the PostgreSQL database and authentication. Supabase's JavaScript client enables real-time, direct database queries from client components without a separate custom backend, significantly cutting development time. |
 | **Supabase Auth** | Provides email/password authentication with a persistent JWT session. Supabase's `onAuthStateChange` listener keeps the Navbar in sync with auth state reactively. |
 | **Supabase Storage** | A dedicated `listing-images` bucket stores user-uploaded cover photos, returning a public CDN URL that is saved in the database. |
-| **Row Level Security (RLS)** | Database-level security policies enforce that only authenticated users can create listings, and only owners can update or delete their own records - making the app secure by default. |
+| **Row Level Security (RLS)** | Database-level security policies enforce that only authenticated users can create listings, and only owners can update or delete their own records. This makes the app secure by default. |
 
 ---
 
@@ -136,7 +136,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ### Core Features
 
-- **🔐 User Registration** - Sign up with display name, email, and password. The display name is stored in Supabase Auth user metadata.
+- **🔐 Secure User Registration** - Sign up with display name, email, and password. I implemented a robust password policy (8+ characters, at least one number, and one symbol) for enhanced security.
 - **🔑 User Login / Logout** - Email/password authentication using `signInWithPassword`. Auth state is synced reactively via `onAuthStateChange` in the Navbar.
 - **📋 Public Experience Feed** - The `/feed` page displays all listings in reverse-chronological order (newest first). Each card shows the listing image, title, location, price, creator's name with an avatar, and the posting date.
 - **✍️ Create a Listing** - Authenticated users can publish a new experience with: Title, Location, Cover Image (file upload), Short Description (max 150 chars with live counter), Full Description, and Price.
@@ -144,18 +144,17 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ### Optional / Advanced Features
 
-- **🔎 Real-time Search & Filtering** - The feed, "My Listings", and "Saved" pages all include a debounced (500ms) search bar that filters results by `title` or `location` using a case-insensitive `ilike` query to Supabase.
-- **📄 Pagination ("Load More")** - All listing grids implement cursor-based pagination, fetching 6 listings at a time. A "Load More" button appends additional results and hides itself when the end of the list is reached.
-- **🖼️ Image File Uploads** - The Create and Edit forms use a `<input type="file">` component. Images are uploaded directly to a Supabase Storage bucket (`listing-images`) and the resulting public CDN URL is stored in the database.
-- **✏️ Edit Listings** - Creators can edit any of their own listings via the `/edit/[id]` page. The page pre-populates all existing fields. Ownership is verified before populating the form and the Supabase RLS policy enforces it at the database level.
-- **🗑️ Delete Listings** - Creators see a "Delete" button on their listing's detail page. A confirmation dialog prevents accidental deletion, after which the listing is removed and the user is redirected to the feed.
-- **❤️ Save / Unsave Listings** - Authenticated users can save and unsave any listing (including from the feed cards directly). Saves are persisted in the `saved_listings` table with a `UNIQUE` constraint preventing duplicate saves.
-- **🗂️ "My Listings" Dashboard** - A personal hub page (`/my-listings`) shows only the listings created by the currently logged-in user, with full search and pagination.
-- **🗃️ "Saved Experiences" Dashboard** - A dedicated page (`/saved`) shows the user's personal wishlist of saved experiences, with search and pagination.
-- **✨ AI-Powered Copy Enhancement** - A "Magic AI Rewrite" button on the Create Listing form calls the server-side `/api/enhance` Next.js API route, which uses the **Google Gemini 2.5 Flash** model to rewrite draft titles and descriptions into polished, professional travel copy.
-- **💀 Skeleton Loading States** - All listing grids display animated skeleton placeholder cards while data is being fetched, preventing layout shift and improving perceived performance.
-- **📱 Mobile Responsive Design** - The application is fully responsive across mobile, tablet, and desktop viewports. Navigation, grid layouts (1 to 2 to 3 columns), and form elements adapt fluidly using Tailwind's responsive prefixes.
-- **🎨 Premium Dark Glassmorphism UI** - A consistent, modern "2030" aesthetic throughout: deep dark backgrounds (`#030712`), frosted glass cards (`backdrop-blur`, `bg-white/[0.03]`), ambient glow orbs, animated gradient text, shimmer CTA buttons, and smooth micro-interactions on hover.
+- **✨ AI-Powered Copy Enhancement** - A "Magic AI Rewrite" button on both Create and Edit forms calls the server-side `/api/enhance` route. This uses the **Google Gemini 2.5 Flash** model to rewrite draft titles and descriptions into polished, professional travel copy.
+- **🔎 Real-time Search & Filtering** - The feed, "My Listings", and "Saved" pages include a debounced (500ms) search bar that filters results by `title` or `location`.
+- **📄 Glitch-Free Pagination** - All listing grids implement stable cursor-based pagination. I refactored the fetch logic to prevent state loops and ensure infinite scroll/load more works reliably even during active searches.
+- **🖼️ Image File Uploads** - Images are uploaded directly to a Supabase Storage bucket (`listing-images`) and mapped to the database.
+- **✏️ Edit Listings** - Creators can edit their listings via `/edit/[id]`. Ownership is verified both in the UI and at the database level via RLS policies.
+- **🗑️ Delete Listings** - Creators can remove their own listings with a double-confirmation flow to prevent accidental deletion.
+- **❤️ Personal Saved List** - Users can save experiences to a personal collection, which is viewable in the "Saved" dashboard.
+- **⚡ Performance & SEO** - Implemented explicit metadata for favicon cache-busting and defined custom brand icons (icon.png) to ensure the platform looks professional from the tab up.
+- **� Fully Responsive Navbar** - Built a custom mobile navigation with an animated hamburger menu and transparent backdrop blur for a premium mobile experience.
+- **💀 Skeleton Loading States** - Animated placeholder cards provide a smooth transition while content is loading.
+- **🎨 Premium Dark UI** - A consistent "2030" aesthetic with deep dark backgrounds (`#030712`), frosted glass components, and vibrant gradient highlights.
 
 ---
 
@@ -264,13 +263,13 @@ travel-platform/
 
 I am a product-driven software engineer with a builder's mindset. I designed, coded, and shipped this entire platform - complete with AI-powered features, real-time search, and full CRUD capabilities - from scratch in under 3 hours. Not a tutorial project. Not a template. A production-grade, fully functional marketplace.
 
-### The Architecture Decision
+### The Architect's Mindset: Code and Test
 
-While the assignment guidelines recommended the traditional MERN stack, a true architect chooses the optimal stack for the business constraints. I am fully proficient in writing robust custom backends with Node, Express, and MongoDB - but I actively chose **Next.js** and **Supabase** for this challenge to demonstrate how I make high-level engineering decisions optimized for speed, security, and scalable deployment. This is not a workaround. This is the exact stack that companies like Vercel, Linear, and Loom use in production.
+I don't just write code that "works." I architect systems that are built to last. For this challenge, I prioritized a stack (Next.js and Supabase) that provides the perfect balance of speed, security, and scalability. I am a firm believer that a developer's job includes ensuring stability through rigorous logic and testing. Whether it is refactoring pagination to eliminate state glitches or implementing client-side validation to prevent bad data from reaching the DB, I treat every edge case as a priority. This is the exact stack that companies like Vercel, Linear, and Loom use in production.
 
 ### Beyond Standard Web Development
 
-I don't write boilerplate. I build intelligent systems. Coming from a First-Class Honors background in Software Engineering, my technical scope extends far beyond standard web development. I have deep practical knowledge in AI and Machine Learning - from leveraging Python for data pipelines to integrating advanced LLMs directly into production applications. The **Gemini 2.5 Flash AI rewrite feature** built into this very challenge is a live example: a server-side API proxy that acts as an expert travel copywriter, a feature most candidates wouldn't even consider building.
+I don't write boilerplate. I build intelligent systems. Coming from a First-Class Honors background in Software Engineering, my technical scope extends far beyond standard web development. I have deep practical knowledge in AI and Machine Learning - from leveraging Python for data pipelines to integrating advanced LLMs directly into production applications. The **Gemini 2.5 Flash AI rewrite feature** built into this very challenge is a live example: a server-side API proxy that acts as an expert travel copywriter, a feature that demonstrates my ability to integrate complex third-party intelligence.
 
 ### Rapid Execution Without Cutting Corners
 
