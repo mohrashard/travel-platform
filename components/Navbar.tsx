@@ -51,6 +51,18 @@ export default function Navbar() {
                                 Experiences
                                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-hover:w-full" />
                             </Link>
+                            {session && (
+                                <>
+                                    <Link href="/my-listings" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors relative group">
+                                        My Listings
+                                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 group-hover:w-full" />
+                                    </Link>
+                                    <Link href="/saved" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors relative group">
+                                        Saved
+                                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-fuchsia-500 transition-all duration-300 group-hover:w-full" />
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
 
