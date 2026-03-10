@@ -34,9 +34,9 @@ export default function MyListingsPage() {
 
     const router = useRouter();
 
-    const fetchListings = useCallback(async (userId: string, isLoadMore = false, currentSearch = '') => {
+    const fetchListings = useCallback(async (userId: string, isLoadMore = false, currentSearch = '', currentPage = 0) => {
         try {
-            const from = isLoadMore ? (page + 1) * ITEMS_PER_PAGE : 0;
+            const from = isLoadMore ? (currentPage + 1) * ITEMS_PER_PAGE : 0;
             const to = from + ITEMS_PER_PAGE - 1;
 
             let query = supabase
@@ -56,7 +56,7 @@ export default function MyListingsPage() {
 
             if (isLoadMore) {
                 setListings((prev) => [...prev, ...(data as Listing[])]);
-                setPage(page + 1);
+                setPage(currentPage + 1);
             } else {
                 setListings(data as Listing[]);
                 setPage(0);
@@ -69,7 +69,7 @@ export default function MyListingsPage() {
             setLoading(false);
             setLoadingMore(false);
         }
-    }, [page]);
+    }, []);
 
     useEffect(() => {
         async function initializeData() {
@@ -264,7 +264,7 @@ export default function MyListingsPage() {
                         {hasMore && (
                             <div className="mt-16 text-center">
                                 <button
-                                    onClick={() => { setLoadingMore(true); fetchListings(currentUser.id, true, searchTerm); }}
+                                    onClick={() => { setLoadingMore(true); fetchListings(currentUser.id, true, searchTerm, page); }}
                                     disabled={loadingMore}
                                     className="group relative inline-flex h-12 flex-col items-center justify-center overflow-hidden rounded-xl bg-transparent px-8 font-medium text-neutral-300 border border-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:text-white disabled:opacity-50"
                                 >
